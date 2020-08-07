@@ -1,46 +1,94 @@
 /// 6 kyu Shortest Path in Perfect City
 function perfectCity(departure, destination) {
-    //your code here
-    const a = departure[1] - departure[0],
-        b = destination[1] - destination[0];
+
+    if (departure[0] > destination[0]) {
+        const temp = destination;
+        destination = departure;
+        departure = temp;
+    }
 
     //// 小数部分
-    const fractional_ax = departure[0] % 1,
+    let fractional_ax = departure[0] % 1,
         fractional_ay = departure[1] % 1,
         fractional_bx = destination[0] % 1,
         fractional_by = destination[1] % 1;
     /// 整数部分
-    const ax = Math.trunc(departure[0]),
+    let ax = Math.trunc(departure[0]),
         ay = Math.trunc(departure[1]),
         bx = Math.trunc(destination[0]),
         by = Math.trunc(destination[1]);
 
+    // //// 一定要矫正浮点数
+
     /// 比较 destination x 左右两端直线的距离
-    const distance_bx_left = fractional_bx,
-        distance_bx_right = bx + 1 - destination[0];
+    let distance_bx_left = fractional_bx,
+        distance_bx_right = rectifyFractionalMinus(rectifyFractional(bx + 1), rectifyFractional(destination[0]));
+    ///矫正
+    if (distance_bx_right === 1) distance_bx_right = 0;
 
-    const distance_ax_left = fractional_ax,
-        distance_ax_right = ax + 1 - destination[0];
+    let distance_ax_left = fractional_ax,
+        distance_ax_right = rectifyFractionalMinus(rectifyFractional(ax + 1), rectifyFractional(departure[0]));
+    ///矫正
+    if (distance_ax_right === 1) distance_ax_right = 0;
 
-    if (distance_ax_left < distance_ax_right) {
-        //// no handle
-    } else {
+    //// destination y
+    let distance_by_down = fractional_by,
+        distance_by_up = rectifyFractionalMinus(rectifyFractional(by + 1), rectifyFractional(destination[1]));
+    ///矫正
+    if (distance_by_up === 1) distance_by_up = 0;
 
-    }
+    let distance_ay_down = fractional_ay,
+        distance_ay_up = rectifyFractionalMinus(rectifyFractional(ay + 1), rectifyFractional(departure[1]));
+    ///矫正
+    if (distance_ay_up === 1) distance_ay_up = 0;
 
 
-    let dis_add_x = 0;
-    const dis_x = 0;
+    let dis_add_x = 0,
+        dis_add_y = 0;
+    // let dis_x = rectifyFractionalMinus(rectifyFractional(destination[0]), rectifyFractional(departure[0])),
+    //     dis_y = rectifyFractionalMinus(rectifyFractional(destination[1]), rectifyFractional(departure[1]));
+    let dis_x = destination[0] - departure[0],
+        dis_y = destination[1] - departure[1];
+
+    // if (distance_ax_left > distance_ax_right) {
+    //     //// no handle
+    // } else {
+    //     dis_add_x += distance_ax_left;
+    // }
 
     if (distance_bx_left < distance_bx_right) {
         /// no handle
     } else {
-        dis_add_x = distance_bx_right;
+        dis_add_x += distance_bx_right;
+    }
+
+    // if (distance_ay_up > distance_ay_down) {
+    //     //// no handle
+    // } else {
+    //     dis_add_y += distance_ay_up;
+    // }
+
+    if (distance_by_up < distance_by_down) {
+        //// no handle
+    } else {
+        dis_add_y += distance_by_down;
     }
 
 
-    return b + a;
+    let res = dis_x + dis_add_x + dis_y + dis_add_y;
 
+    return '' + res;
+
+}
+
+function rectifyFractional(num) {
+    /// 只需要十倍操作
+    return (num * 10) / 1e1;
+}
+
+function rectifyFractionalMinus(a, b) {
+    /// 只需要十倍操作
+    return (a * 10 - b * 10) / 1e1;
 }
 
 
