@@ -103,3 +103,12 @@ function fractional(num) {
 
 var log = perfectCity([0.4, 1], [0.9, 3]);
 console.log(log);
+
+//// 怎么解决精度问题？
+///// 将数字转化为整数
+function add(num1, num2) {
+    const num1Digits = (num1.toString().split('.')[1] || '').length;
+    const num2Digits = (num2.toString().split('.')[1] || '').length;
+    const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
+    return (num1 * baseNum + num2 * baseNum) / baseNum;
+}
