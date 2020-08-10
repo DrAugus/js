@@ -77,6 +77,9 @@ function perfectCity(departure, destination) {
 
     let res = dis_x + dis_add_x + dis_y + dis_add_y;
 
+
+    alert(res);
+
     return '' + res;
 
 }
