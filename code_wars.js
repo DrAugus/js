@@ -112,3 +112,28 @@ function add(num1, num2) {
     const baseNum = Math.pow(10, Math.max(num1Digits, num2Digits));
     return (num1 * baseNum + num2 * baseNum) / baseNum;
 }
+
+
+function test0825() {
+    var arr = [0x01, 0x02, 0x32, 0x12, 0x24, 0x45, 0x06, 0x07];
+    arr.sort(function (a, b) {
+        return (GetCardLogicValue(b) - GetCardLogicValue(a)) || ((b - a) && (GetCardLogicValue(b) == GetCardLogicValue(a)));
+    });
+
+    return arr;
+}
+
+console.log(test0825());
+
+function GetCardLogicValue(cbCardData) {
+    //扑克属性
+    var cbCardColor = (cbCardData) & 0xf0;
+    var cbCardValue = (cbCardData) & 0x0f;
+
+
+    return cbCardValue;
+}
+
+
+
+
