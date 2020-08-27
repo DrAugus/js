@@ -78,7 +78,7 @@ function perfectCity(departure, destination) {
     let res = dis_x + dis_add_x + dis_y + dis_add_y;
 
 
-    alert(res);
+    // alert(res);
 
     return '' + res;
 
@@ -115,12 +115,61 @@ function add(num1, num2) {
 
 
 function test0825() {
-    var arr = [0x01, 0x02, 0x32, 0x12, 0x24, 0x45, 0x06, 0x07];
-    arr.sort(function (a, b) {
-        return (GetCardLogicValue(b) - GetCardLogicValue(a)) || ((b - a) && (GetCardLogicValue(b) == GetCardLogicValue(a)));
-    });
+    var arr = [
+        0x01, 0x02, 0x02, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D,	//方块 A - K
+        0x11, 0x12, 0x13, 0x01, 0x01, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,	//梅花 A - K
+        0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D,	//红桃 A - K
+    ];
 
+    SortCardList(arr, arr.length, 2);
     return arr;
+}
+
+function SortCardList(cbCardData, cbCardCount, SortType) {
+    switch (SortType) {
+        case 0:
+            console.log('Des');
+            cbCardData.sort(function (a, b) {
+                if (GetCardLogicValue(a) > GetCardLogicValue(b))
+                    return -1;
+                else if (GetCardLogicValue(a) < GetCardLogicValue(b))
+                    return 1;
+                else {
+                    if (a > b) return -1;
+                    else if (a < b) return 1;
+                }
+                return 0;
+            });
+            break;
+        case 1:
+            console.log('Asc');
+            cbCardData.sort(function (a, b) {
+                if (GetCardLogicValue(a) > GetCardLogicValue(b))
+                    return 1;
+                else if (GetCardLogicValue(a) < GetCardLogicValue(b))
+                    return -1;
+                else {
+                    if (a > b) return 1;
+                    else if (a < b) return -1;
+                }
+                return 0;
+            });
+            break;
+        case 2:
+            console.log('ColorDes');
+            cbCardData.sort(function (a, b) {
+                if (GetCardColor(a) > GetCardColor(b))
+                    return -1;
+                else if (GetCardColor(a) < GetCardColor(b))
+                    return 1;
+                else {
+                    if (GetCardLogicValue(a) > GetCardLogicValue(b)) return -1;
+                    else if (GetCardLogicValue(a) < GetCardLogicValue(b)) return 1;
+                }
+                return 0;
+            });
+            break;
+    }
 }
 
 console.log(test0825());
@@ -130,8 +179,14 @@ function GetCardLogicValue(cbCardData) {
     var cbCardColor = (cbCardData) & 0xf0;
     var cbCardValue = (cbCardData) & 0x0f;
 
+    if (cbCardColor == 0x40) return cbCardValue + 2;
 
-    return cbCardValue;
+    return (cbCardValue <= 2) ? (cbCardValue + 13) : cbCardValue;
+
+}
+
+function GetCardColor(cbCardData) {
+    return (cbCardData) & 0xf0;
 }
 
 
