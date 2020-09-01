@@ -100,7 +100,6 @@ function fractional(num) {
     return num - Math.trunc(num);
 }
 
-
 var log = perfectCity([0.4, 1], [0.9, 3]);
 console.log(log);
 
@@ -121,73 +120,60 @@ function test0825() {
         0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D,	//红桃 A - K
     ];
 
-    SortCardList(arr, arr.length, 2);
+    common_part.SortCardList(arr, arr.length, 2);
     return arr;
 }
 
-function SortCardList(cbCardData, cbCardCount, SortType) {
-    switch (SortType) {
-        case 0:
-            console.log('Des');
-            cbCardData.sort(function (a, b) {
-                if (GetCardLogicValue(a) > GetCardLogicValue(b))
-                    return -1;
-                else if (GetCardLogicValue(a) < GetCardLogicValue(b))
-                    return 1;
-                else {
-                    if (a > b) return -1;
-                    else if (a < b) return 1;
-                }
-                return 0;
-            });
-            break;
-        case 1:
-            console.log('Asc');
-            cbCardData.sort(function (a, b) {
-                if (GetCardLogicValue(a) > GetCardLogicValue(b))
-                    return 1;
-                else if (GetCardLogicValue(a) < GetCardLogicValue(b))
-                    return -1;
-                else {
-                    if (a > b) return 1;
-                    else if (a < b) return -1;
-                }
-                return 0;
-            });
-            break;
-        case 2:
-            console.log('ColorDes');
-            cbCardData.sort(function (a, b) {
-                if (GetCardColor(a) > GetCardColor(b))
-                    return -1;
-                else if (GetCardColor(a) < GetCardColor(b))
-                    return 1;
-                else {
-                    if (GetCardLogicValue(a) > GetCardLogicValue(b)) return -1;
-                    else if (GetCardLogicValue(a) < GetCardLogicValue(b)) return 1;
-                }
-                return 0;
-            });
-            break;
-    }
-}
 
 console.log(test0825());
 
-function GetCardLogicValue(cbCardData) {
-    //扑克属性
-    var cbCardColor = (cbCardData) & 0xf0;
-    var cbCardValue = (cbCardData) & 0x0f;
 
-    if (cbCardColor == 0x40) return cbCardValue + 2;
+/// 由 cpp count/find 引起的想法
+/// js计算数组中某个元素重复出现的个数
+console.log('数组counts中"李"出现的次数是：' + self_method.CountRepeatValue(['李', '李', '设', '弟', '弟', '生', '生', '李'], '李'));
 
-    return (cbCardValue <= 2) ? (cbCardValue + 13) : cbCardValue;
+console.log('统计一个数组中有多少个不重复的单词：');
+var arr1 = ['李', '李', '设', '弟', '弟', '生', '生', '李'];
+console.log('不用reduce时：');
+console.log(self_method.GetRepeatNum(arr1));
+console.log('用reduce时：');
+console.log(self_method.GetRepeatNum2(arr1));
 
-}
 
-function GetCardColor(cbCardData) {
-    return (cbCardData) & 0xf0;
-}
+console.log('reduce 的其他用法：');
+
+console.log('（1）数组求和，求乘积：');
+let arr2 = [1, 2, 3, 4, 4, 1];
+console.log('reduce_apply -> sum->', self_method.reduce_apply.sum(arr2));
+console.log('reduce_apply -> mul->', self_method.reduce_apply.mul(arr2));
+
+console.log('(2)数组去重：');
+console.log(self_method.reduce_apply.CleanRepeat(arr2));// [1, 2, 3, 4]
+
+console.log('(3)将二维数组转化为一维');
+let arr3 = [[0, 1], [2, 3], [4, 5]];
+console.log('dimensionality reduction ', self_method.reduce_apply.ChangeArr(arr3)); // [0, 1, 2, 3, 4, 5]
+
+console.log('(4)将多维数组转化为一维');
+let arr4 = [[0, 1], [2, 3], [4, [5, 6, 7]]];
+console.log('dimensionality reduction ', self_method.reduce_apply.ChangeArr2(arr4));//[0, 1, 2, 3, 4, 5, 6, 7]
+
+console.log('(5)对象里的属性求和');
+var obj = [
+    {
+        subject: 'math',
+        score: 10
+    },
+    {
+        subject: 'chinese',
+        score: 20
+    },
+    {
+        subject: 'english',
+        score: 30
+    }
+];
+console.log('sum property in object ', self_method.reduce_apply.SumInObject(obj));
 
 
 
