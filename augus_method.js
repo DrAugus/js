@@ -98,6 +98,80 @@ const self_method = (() => {
 
 })();
 
+/// 功能模块
+const facility_module = (() => {
+
+    /// 阻止事件冒泡封装
+    const stopBubble = (eve) => {
+        if (event.stopPropagation) {
+            eve.stopPropagation();
+        } else {
+            eve.cancelBubble = true;
+        }
+    };
+
+    /// 事件委托的封装
+    const eveEnt = (child, cb) => {
+        return function (eve) {
+            let e = eve || window.eveEnt;
+            let targetEle = e.target || e.srcElement;
+            for (let i = 0; i < child.length; i++) {
+                if (child[i] == targetEle) {
+                    cb.call(targetEle)();
+                }
+            }
+        };
+    };
+
+    /// 获取可视窗口大小
+    const view = () => {
+        return {
+            width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth || 0,
+            height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0
+        };
+    };
+
+    /// 获取已经滚动到元素的左边界或上边界的像素数
+    const scroll = () => {
+        return {
+            top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0,
+            left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0
+        };
+    };
+
+    /// event兼容
+    const eve = {
+        getEvent: function (event) {
+            return event || window.event;
+        }
+    };
+
+    const random = (min, max) => {
+        return Math.round(Math.random() * (max - min) + min);
+    };
+
+    /// 获取行内样式的兼容
+    const getStyle = (ele, attr) => {
+        if (ele.currentStyle) {
+            return currentStyle[attr];
+        } else {
+            return getComputedStyle(ele, false)[attr];
+        }
+    };
+
+    return {
+        stopBubble: stopBubble,
+        eveEnt: eveEnt,
+        view: view,
+        scroll: scroll,
+        eve: eve,
+        random: random,
+        getStyle: getStyle,
+    };
+
+})();
+
+
 const common_part = (() => {
 
     const GetCardColor = (cbCardData) => {
@@ -170,6 +244,8 @@ const common_part = (() => {
 
 const poker_module = (() => {
 })();
-　　
 
+const mahjong_module = (() => {
+})();
+　　
 
