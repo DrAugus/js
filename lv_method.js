@@ -16,7 +16,7 @@ const lv_method = (() => {
             if (!bExcludeSpaceElement)
                 TempArray_1[TempArray_1.length] = Array_1[i];
             else {
-                if (Array_1[i] != undefined || Array_1[i] != null)
+                if (Array_1[i] != undefined && Array_1[i] != null)
                     TempArray_1[TempArray_1.length] = Array_1[i];
             }
         }
@@ -25,7 +25,7 @@ const lv_method = (() => {
             if (!bExcludeSpaceElement)
                 TempArray_2[TempArray_2.length] = Array_2[i];
             else {
-                if (Array_2[i] != undefined || Array_2[i] != null)
+                if (Array_2[i] != undefined && Array_2[i] != null)
                     TempArray_2[TempArray_2.length] = Array_2[i];
             }
         }
@@ -34,8 +34,19 @@ const lv_method = (() => {
             if (TempArray_1.length != TempArray_2.length)
                 return false;
 
-            for (var i in TempArray_1) {
-                if (TempArray_1[i] != TempArray_2[i])
+            for(var i in TempArray_1)
+            {
+                if(Array.isArray(TempArray_1[i]) && Array.isArray(TempArray_2[i]))
+                {
+                    if(!this.IsSameArray(TempArray_1[i], TempArray_2[i], bExcludeSpaceElement, bCompleteSame))
+                        return false;
+                }
+                else if(!Array.isArray(TempArray_1[i]) && !Array.isArray(TempArray_2[i]))
+                {
+                    if(TempArray_1[i] != TempArray_2[i])
+                        return false;
+                }
+                else
                     return false;
             }
 
@@ -46,10 +57,22 @@ const lv_method = (() => {
             for (var i in TempArray_1) {
                 for (var j in TempArray_2) {
                     if (bSame_2[j] == true) continue;
-                    if (TempArray_1[i] == TempArray_2[j]) {
-                        bSame_2[j] = true;
-                        break;
+                    if(Array.isArray(TempArray_1[i]) && Array.isArray(TempArray_2[j]))
+                    {
+                        if(this.IsSameArray(TempArray_1[i], TempArray_2[j], bExcludeSpaceElement, bCompleteSame))
+                        {
+                            bSame_2[j] = true;
+                            break;
+                        }
                     }
+                    else if(!Array.isArray(TempArray_1[i]) && !Array.isArray(TempArray_2[j]))
+                    {
+                        if(TempArray_1[i] == TempArray_2[j])
+                        {
+                            bSame_2[j] = true;
+                            break;
+                        }
+                    } 
 
                 }
             }
@@ -57,9 +80,21 @@ const lv_method = (() => {
             for (var i in TempArray_2) {
                 for (var j in TempArray_1) {
                     if (bSame_1[j] == true) continue;
-                    if (TempArray_2[i] == TempArray_1[j]) {
-                        bSame_1[j] = true;
-                        break;
+                    if(Array.isArray(TempArray_2[i]) && Array.isArray(TempArray_1[j]))
+                    {
+                        if(this.IsSameArray(TempArray_2[i], TempArray_1[j], bExcludeSpaceElement, bCompleteSame))
+                        {
+                            bSame_1[j] = true;
+                            break;
+                        }
+                    }
+                    else if(!Array.isArray(TempArray_2[i]) && !Array.isArray(TempArray_1[j]))
+                    {
+                        if(TempArray_2[i] == TempArray_1[j])
+                        {
+                            bSame_1[j] = true;
+                            break;
+                        } 
                     }
                 }
             }
