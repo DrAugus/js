@@ -176,7 +176,17 @@ var obj = [
 console.log('sum property in object ', self_method.reduce_apply.SumInObject(obj));
 
 
-let arr1015_1 = [1, 2, 3, 4, 5, 7,6, 8],
-    arr1015_2 = [1, 2, 3, 4, 5, 6, 7, 8];
+let arr1015_1 = [1, 2, 3, 4, 5, undefined, 6, 8],
+    arr1015_2 = [1, 2, 3, 4, 5, 6, undefined, 8];
 console.log('fun lvsiwen isSameArray test-----------', arr1015_1, arr1015_2, lv_method.isSameArray(arr1015_1, arr1015_2, false, false));
 
+
+var cbCard = [0, 0, 1, 0];
+var a = false;
+if (cbCard.every(value => {
+    return !value
+})) {
+    a = true;
+
+}
+console.log(a)
