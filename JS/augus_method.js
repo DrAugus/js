@@ -174,8 +174,40 @@ const facility_module = (() => {
 
 const common_part = (() => {
 
+    var enDescend = 0;
+    var enAscend = 1;
+    var enColor = 2;
+
     const GetCardColor = (cbCardData) => {
         return (cbCardData) & 0xf0;
+    };
+
+    const GetCardValue = (cbCardData) => {
+        return cbCardData & 0x0f;
+    };
+
+    const isValidCard = (cbCardData) => {
+        var valid = true
+        if (GetCardColor(cbCardData) < 0 || GetCardColor(cbCardData) > 0x40) valid = false
+        if (GetCardValue(cbCardData) < 1 || GetCardValue(cbCardData) > 0x0f) valid = false
+        return valid
+    };
+
+    const _IsPrimaryCard = (cbCardData, cbPrimaryColor) => {
+        var valid = isValidCard(cbCardData)
+        if (!valid) return false
+        var bIsPrimary = defaultPrimaryCard(cbCardData)
+        if (GetCardColor(cbCardData) == cbPrimaryColor) bIsPrimary = true;
+        return bIsPrimary;
+    };
+
+    const defaultPrimaryCard = (cbCardData) => {
+        /// 公务员：大王、小王，黑桃A、主2、6个副2；
+        var bIsPrimary = false;
+        if (GetCardColor(cbCardData) == 0x40) bIsPrimary = true;
+        if (cbCardData == 0x31) bIsPrimary = true
+        if (GetCardValue(cbCardData) == 0x02) bIsPrimary = true;
+        return bIsPrimary;
     };
 
     const GetCardLogicValue = (cbCardData) => {
@@ -183,11 +215,62 @@ const common_part = (() => {
         var cbCardColor = (cbCardData) & 0xf0;
         var cbCardValue = (cbCardData) & 0x0f;
 
-        if (cbCardColor == 0x40) return cbCardValue + 2;
+        if (cbCardColor == 0x40) return cbCardValue + 3;
+        else if (cbCardValue == 7) return 16;
 
         return (cbCardValue <= 2) ? (cbCardValue + 13) : cbCardValue;
 
     };
+
+    const SortCardByColor = (cbCardData, cbCardCount, specificColor = null) => {
+        SortCardList(cbCardData, cbCardCount, enColor);
+
+        var primary5Data = []
+        var primaryJokerData = []
+        var primaryAceData = []
+        var primary2Data = [] /// dont forget fix
+        var primaryDragonData = []
+        var primaryData = []
+
+        /// 公务员：(主5) 大王、小王，黑桃A、主2、6个副2；
+        for (var index in cbCardData) {
+            if (_IsPrimaryCard(cbCardData[index], specificColor)) {
+                if (GetCardValue(cbCardData[index]) == 0x05) primary5Data.push(cbCardData[index])
+                else if (GetCardColor(cbCardData[index]) == 0x40) primaryJokerData.push(cbCardData[index])
+                else if (cbCardData[index] == 0x31) primaryAceData.push(cbCardData[index])
+                else if (GetCardValue(cbCardData[index]) == 0x02) primary2Data.push(cbCardData[index])
+                else primaryData.push(cbCardData[index])
+
+                cbCardData[index] = 0
+            }
+        }
+
+        var fixPrimary2Data = []
+        for (var indexFix in primary2Data) {
+            if (GetCardColor(primary2Data[indexFix]) == specificColor) {
+                fixPrimary2Data.push(primary2Data[indexFix])
+                primary2Data[indexFix] = 0
+            }
+        }
+        for (var data of primary2Data) {
+            if (data) fixPrimary2Data.push(data)
+        }
+
+
+        var otherData = []
+        for (var dataSource of cbCardData) {
+            if (dataSource) otherData.push(dataSource)
+        }
+
+        var res = []
+        res = res.concat(primary5Data, primaryJokerData, primaryAceData, fixPrimary2Data, primaryDragonData, primaryData, otherData)
+        console.warn('SortCardByColor')
+        var str = ''
+        for (var d of res)
+            str += ' 0x' + d.toString(16)
+        console.warn(str)
+    };
+
 
     const SortCardList = (cbCardData, cbCardCount, SortType) => {
         switch (SortType) {
@@ -238,6 +321,7 @@ const common_part = (() => {
 
     return {
         SortCardList: SortCardList,
+        SortCardByColor: SortCardByColor,
     };
 
 })();
