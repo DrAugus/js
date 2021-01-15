@@ -11,7 +11,6 @@ let a = isExitWind(2)
 console.log('test ts----', a)
 
 
-
 const test1023 = () => {
     let indexWind = [3, 4, 0];
     let cnt = indexWind[0] + indexWind[1] + indexWind[2] + indexWind[3]
@@ -25,4 +24,4 @@ const test1023 = () => {
 }
 
 let b = test1023();
-console.log('fafafaf',b);
+console.log('fafafaf', b);

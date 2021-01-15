@@ -4,7 +4,16 @@
     "target": "es5",
     "sourceMap": true
   },
+  //在表达式和声明上有隐含的 'any' 类型时报错。
+  "noImplicitAny": true,
+  //仅用来控制输出的目录结构--outDir。
+  "rootDirs": [
+    "."
+  ],
+  //重定向输出目录。
+  "outDir": "./dist",
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "./dist/**/*.*"
   ]
 }
